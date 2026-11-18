@@ -1,6 +1,6 @@
 # «Только мы»: аудио- и видеозвонки (MatrixRTC / LiveKit)
 
-**Статус: конфигурация готова к установке, но на VPS не применена.** Для двух тестовых аккаунтов (Jony и Natasha). По состоянию на ноябрь 2026 — Synapse 1.163.0, LiveKit 1.13.10, lk-jwt-service 0.9.0. Источники: [официальная инструкция Element Call](https://github.com/element-hq/element-call/blob/main/docs/self_hosting.md), [справочник LiveKit](https://docs.livekit.io/transport/self-hosting/deployment/).
+**Статус: конфигурация готова к установке, но на VPS не применена.** Для двух тестовых аккаунтов (Jony и Natasha). По состоянию на ноябрь 2026 — Synapse 1.163.0, LiveKit 1.13.10, lk-jwt-service 0.10.0. Источники: [официальная инструкция Element Call](https://github.com/element-hq/element-call/blob/main/docs/self_hosting.md), [справочник LiveKit](https://docs.livekit.io/transport/self-hosting/deployment/).
 
 Существующие Docker-контейнеры Synapse/PostgreSQL и Nginx не заменяем. Используем **тот же домен** `matrix.tyanet.ru`, без создания дополнительного DNS и SSL-сертификата.
 
