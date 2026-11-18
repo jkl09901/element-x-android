@@ -9,6 +9,7 @@
 package io.element.android.x
 
 import android.app.Application
+import android.content.Context
 import android.os.StrictMode
 import androidx.compose.material3.ComposeMaterial3Flags.isAnchoredDraggableComponentsStrictOffsetCheckEnabled
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +40,10 @@ class ElementXApplication private constructor(
     Configuration.Provider,
     ElementCallActivity.Host by elementCallActivityHost {
     constructor() : this(ElementCallActivityHostDelegate())
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(RussianLocale.wrap(base))
+    }
 
     override val graph: AppGraph = createGraphFactory<AppGraph.Factory>().create(this)
 
