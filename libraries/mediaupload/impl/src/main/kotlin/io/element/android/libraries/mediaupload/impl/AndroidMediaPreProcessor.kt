@@ -266,8 +266,13 @@ class AndroidMediaPreProcessor(
 
     private suspend fun processVideo(uri: Uri, mimeType: String?, videoCompressionPreset: VideoCompressionPreset): MediaUploadInfo {
         Timber.d("Processing video ${uri.path.orEmpty().hash()}")
+        // Gallery and Android Photo Picker usually return content:// URIs whose
+        // permission is temporary. Media3 can be asynchronous: use a stable
+        // copy owned by the app, exactly as with a camera capture, so that
+        // transcoding never depends on the external picker/provider lifetime.
+        val sourceFile = copyToTmpFile(uri)
         val resultFile = runCatchingExceptions {
-            videoCompressor.compress(uri, videoCompressionPreset)
+            videoCompressor.compress(Uri.fromFile(sourceFile), videoCompressionPreset)
                 .onEach {
                     if (it is VideoTranscodingEvent.Progress) {
                         Timber.d("Video compression progress: ${it.value}%")
@@ -293,9 +298,20 @@ class AndroidMediaPreProcessor(
                 thumbnailFile = thumbnailInfo?.file
             )
         } else {
-            Timber.d("Could not transcode video ${uri.path.orEmpty().hash()}, sending original file as plain file")
-            // If the video could not be compressed, just use the original one, but send it as a file
-            return processFile(uri, MimeTypes.OctetStream)
+            Timber.w("Could not transcode video ${uri.path.orEmpty().hash()}, sending copied original video")
+            // Preserve access to the copied source even if the photo picker has
+            // already released its URI. Sending as a file is deliberate when
+            // transcoding failed; we cannot guarantee that the original codec
+            // is supported by all recipients.
+            return MediaUploadInfo.AnyFile(
+                file = sourceFile,
+                fileInfo = FileInfo(
+                    mimetype = mimeType ?: MimeTypes.OctetStream,
+                    size = sourceFile.length(),
+                    thumbnailInfo = null,
+                    thumbnailSource = null,
+                ),
+            )
         }
     }
 
