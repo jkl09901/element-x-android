@@ -17,14 +17,14 @@ object ApplicationConfig {
      * - "Element X dbg" for debug builds;
      * - "Element X nightly" for nightly builds.
      */
-    const val APPLICATION_NAME: String = ""
+    const val APPLICATION_NAME: String = "Только мы"
 
     /**
      * Used in the strings to reference the Element client.
      * Cannot be empty.
      * For Element, the value is "Element".
      */
-    const val PRODUCTION_APPLICATION_NAME: String = "Element"
+    const val PRODUCTION_APPLICATION_NAME: String = "Только мы"
 
     /**
      * Used in the strings to reference the Element Desktop client, for instance Element Web.
