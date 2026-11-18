@@ -133,7 +133,10 @@ android {
                 "login_redirect_scheme",
                 oAuthRedirectSchemeBase,
             )
-            signingConfig = signingConfigs.getByName("debug")
+            // Do not sign release packages with the public debug.keystore.
+            // Release stays unsigned until a user-controlled private key
+            // and safe upgrade/migration procedure are prepared.
+            signingConfig = null
 
             optimization {
                 enable = true
