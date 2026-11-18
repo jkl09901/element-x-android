@@ -1,0 +1,4 @@
+# Never commit call infrastructure credentials.
+secrets/
+livekit.yaml
+*.bak
