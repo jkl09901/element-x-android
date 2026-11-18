@@ -82,3 +82,8 @@ sudo docker compose exec synapse register_new_matrix_user -c /data/homeserver.ya
 - https://matrix-org.github.io/synapse/latest/setup/installation.html
 - https://element-hq.github.io/synapse/latest/reverse_proxy.html
 - https://github.com/matrix-org/synapse/blob/develop/docker/README.md
+
+
+## Аудио- и видеозвонки
+
+Для звонков в Android-приложении «Только мы» подготовлен отдельный MatrixRTC-стек с LiveKit и сервисом авторизации. Ничего из существующих настроек Matrix и сайта «ТЯНЕТ» не нужно удалять. Пошаговая установка с резервными копиями и диагностикой: [rtc/README_RU.md](rtc/README_RU.md).
