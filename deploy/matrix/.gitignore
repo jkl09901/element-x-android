@@ -1,0 +1,7 @@
+# These contain private signing keys, database credentials and media.
+.env
+synapse-data/
+postgres-data/
+*.sql
+*.sql.gz
+backups/
