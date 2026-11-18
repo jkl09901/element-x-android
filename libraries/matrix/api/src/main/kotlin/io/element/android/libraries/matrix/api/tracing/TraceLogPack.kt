@@ -10,22 +10,22 @@ package io.element.android.libraries.matrix.api.tracing
 
 enum class TraceLogPack(val key: String) {
     EVENT_CACHE("event_cache") {
-        override val title: String = "Event Cache"
+        override val title: String = "Кэш событий"
     },
     SEND_QUEUE("send_queue") {
-        override val title: String = "Send Queue"
+        override val title: String = "Очередь отправки"
     },
     TIMELINE("timeline") {
-        override val title: String = "Timeline"
+        override val title: String = "История сообщений"
     },
     NOTIFICATION_CLIENT("notification_client") {
-        override val title: String = "Notification Client"
+        override val title: String = "Получение уведомлений"
     },
     SYNC_PROFILING("sync_profiling") {
-        override val title: String = "Sync Profiling"
+        override val title: String = "Диагностика синхронизации"
     },
     LATEST_EVENTS("latest_events") {
-        override val title = "Latest Events"
+        override val title = "Последние события"
     };
 
     abstract val title: String
