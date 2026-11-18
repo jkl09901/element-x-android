@@ -146,7 +146,15 @@ class AndroidMediaPreProcessor(
     private fun MediaUploadInfo.postProcess(uri: Uri): MediaUploadInfo {
         Timber.d("Finished processing, post-processing ${uri.path.orEmpty().hash()}")
         val name = context.getFileName(uri) ?: return this
-        val renamedFile = File(context.cacheDir, name).also {
+        // Transcoding always produces MP4 (H.264/AAC), even if the source was MOV,
+        // MKV or another video container. Preserve a matching extension so the
+        // receiving client and Android media decoders recognize it correctly.
+        val outputName = if (this is MediaUploadInfo.Video) {
+            name.substringBeforeLast('.', name) + ".mp4"
+        } else {
+            name
+        }
+        val renamedFile = File(context.cacheDir, outputName).also {
             file.safeRenameTo(it)
         }
         return when (this) {
@@ -278,7 +286,7 @@ class AndroidMediaPreProcessor(
 
         if (resultFile != null) {
             val thumbnailInfo = thumbnailFactory.createVideoThumbnail(resultFile)
-            val videoInfo = extractVideoMetadata(resultFile, mimeType, thumbnailInfo)
+            val videoInfo = extractVideoMetadata(resultFile, MimeTypes.Mp4, thumbnailInfo)
             return MediaUploadInfo.Video(
                 file = resultFile,
                 videoInfo = videoInfo,
