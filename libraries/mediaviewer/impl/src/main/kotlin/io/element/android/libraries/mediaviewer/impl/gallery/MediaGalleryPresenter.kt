@@ -24,7 +24,8 @@ import io.element.android.features.contentscanner.api.ContentScannerService
 import io.element.android.libraries.androidutils.R
 import io.element.android.libraries.architecture.AsyncData
 import io.element.android.libraries.architecture.Presenter
-import io.element.android.libraries.core.extensions.mapCatchingExceptions
+import kotlinx.coroutines.CancellationException
+import timber.log.Timber
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarDispatcher
 import io.element.android.libraries.designsystem.utils.snackbar.SnackbarMessage
 import io.element.android.libraries.designsystem.utils.snackbar.collectSnackbarMessageAsState
@@ -185,54 +186,63 @@ class MediaGalleryPresenter(
         )
     }
 
-    private suspend fun downloadMedia(mediaItem: MediaItem.Event): Result<LocalMedia> {
+    /**
+     * Keep the Rust MediaFile handle alive until saving, sharing or opening has finished.
+     * A LocalMedia only stores the temporary file URI; dropping the handle too early
+     * can delete that file and cause intermittent failures on Android.
+     */
+    private suspend fun performMediaAction(
+        mediaItem: MediaItem.Event,
+        action: suspend (LocalMedia) -> Result<Unit>,
+    ): Result<Unit> {
         return mediaLoader.downloadMediaFile(
             source = mediaItem.mediaSource(),
             mimeType = mediaItem.mediaInfo().mimeType,
-            filename = mediaItem.mediaInfo().filename
+            filename = mediaItem.mediaInfo().filename,
+        ).fold(
+            onSuccess = { mediaFile ->
+                try {
+                    val localMedia = localMediaFactory.createFromMediaFile(
+                        mediaFile = mediaFile,
+                        mediaInfo = mediaItem.mediaInfo(),
+                    )
+                    action(localMedia)
+                } catch (exception: CancellationException) {
+                    throw exception
+                } catch (exception: Exception) {
+                    Result.failure(exception)
+                } finally {
+                    mediaFile.close()
+                }
+            },
+            onFailure = { Result.failure(it) },
         )
-            .mapCatchingExceptions { mediaFile ->
-                localMediaFactory.createFromMediaFile(
-                    mediaFile = mediaFile,
-                    mediaInfo = mediaItem.mediaInfo()
-                )
-            }
     }
 
     private suspend fun saveOnDisk(mediaItem: MediaItem.Event) {
-        downloadMedia(mediaItem)
-            .mapCatchingExceptions { localMedia ->
-                localMediaActions.saveOnDisk(localMedia)
-            }
+        performMediaAction(mediaItem, localMediaActions::saveOnDisk)
             .onSuccess {
-                val snackbarMessage = SnackbarMessage(CommonStrings.common_file_saved_on_disk_android)
-                snackbarDispatcher.post(snackbarMessage)
+                snackbarDispatcher.post(SnackbarMessage(CommonStrings.common_file_saved_on_disk_android))
             }
             .onFailure {
-                val snackbarMessage = SnackbarMessage(mediaActionsError(it))
-                snackbarDispatcher.post(snackbarMessage)
+                Timber.e(it, "Unable to save downloaded media")
+                snackbarDispatcher.post(SnackbarMessage(mediaActionsError(it)))
             }
     }
 
     private suspend fun share(mediaItem: MediaItem.Event) {
-        downloadMedia(mediaItem)
-            .mapCatchingExceptions { localMedia ->
-                localMediaActions.share(localMedia)
-            }
+        performMediaAction(mediaItem, localMediaActions::share)
             .onFailure {
-                val snackbarMessage = SnackbarMessage(mediaActionsError(it))
-                snackbarDispatcher.post(snackbarMessage)
+                Timber.e(it, "Unable to share downloaded media")
+                snackbarDispatcher.post(SnackbarMessage(mediaActionsError(it)))
             }
     }
 
     private suspend fun openWith(mediaItem: MediaItem.Event) {
-        downloadMedia(mediaItem)
-            .mapCatchingExceptions { localMedia ->
-                localMediaActions.open(localMedia)
-            }
+        performMediaAction(mediaItem, localMediaActions::open)
             .onFailure {
-                val snackbarMessage = SnackbarMessage(mediaActionsError(it))
-                snackbarDispatcher.post(snackbarMessage)
+                Timber.e(it, "Unable to open downloaded media")
+                snackbarDispatcher.post(SnackbarMessage(mediaActionsError(it)))
             }
     }
 
