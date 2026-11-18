@@ -1,0 +1,30 @@
+name: tolkomy-calls
+
+services:
+  livekit:
+    image: livekit/livekit-server:v1.13.10
+    command: ["--config", "/etc/livekit.yaml"]
+    restart: unless-stopped
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml:ro
+    ports:
+      # Signalling is private: the existing Nginx proxies it via HTTPS.
+      - "127.0.0.1:17880:7880"
+      # Media has to be accessible directly to the participants.
+      - "7881:7881/tcp"
+      - "50000-50100:50000-50100/udp"
+
+  jwt:
+    image: ghcr.io/element-hq/lk-jwt-service:0.9.0
+    restart: unless-stopped
+    environment:
+      LIVEKIT_URL: "wss://matrix.tyanet.ru/livekit/sfu"
+      LIVEKIT_KEY: "lk-matrixrtc"
+      LIVEKIT_SECRET_FROM_FILE: "/run/secrets/livekit_secret"
+      LIVEKIT_FULL_ACCESS_HOMESERVERS: "matrix.tyanet.ru"
+      LIVEKIT_JWT_BIND: ":8080"
+      LIVEKIT_LOG_LEVEL: "info"
+    volumes:
+      - ./secrets/livekit_secret:/run/secrets/livekit_secret:ro
+    ports:
+      - "127.0.0.1:18080:8080"
