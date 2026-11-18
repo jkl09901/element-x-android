@@ -24,156 +24,147 @@ enum class FeatureFlags(
 ) : Feature {
     ShowBlockedUsersDetails(
         key = "feature.showBlockedUsersDetails",
-        title = "Show blocked users details",
-        description = "Show the name and avatar of blocked users in the blocked users list",
+        title = "Данные заблокированных",
+        description = "Показывать имя и аватар заблокированных пользователей в списке.",
         defaultValue = { false },
         isFinished = false,
     ),
     SyncOnPush(
         key = "feature.syncOnPush",
-        title = "Sync on push",
-        description = "Subscribe to room sync when a push is received",
+        title = "Синхронизация при уведомлении",
+        description = "Обновлять переписки при получении push-уведомления.",
         defaultValue = { true },
         isFinished = false,
     ),
     OnlySignedDeviceIsolationMode(
         key = "feature.onlySignedDeviceIsolationMode",
-        title = "Exclude insecure devices when sending/receiving messages",
-        description = "This setting controls how end-to-end encryption (E2E) keys are shared." +
-            " Enabling it will prevent the inclusion of devices that have not been explicitly verified by their owners." +
-            " You'll have to stop and re-open the app manually for that setting to take effect.",
+        title = "Только проверенные устройства",
+        description = "Передавать ключи сквозного шифрования только подтверждённым устройствам. После включения перезапустите приложение; непроверенные устройства не смогут читать новые сообщения.",
         defaultValue = { false },
         isFinished = false,
     ),
     PrintLogsToLogcat(
         key = "feature.print_logs_to_logcat",
-        title = "Print logs to logcat",
-        description = "Print logs to logcat in addition to log files. Requires an app restart to take effect." +
-            "\n\nWARNING: this will make the logs visible in the device logs and may affect performance. " +
-            "It's not intended for daily usage in release builds.",
+        title = "Запись журнала в систему Android",
+        description = "Дополнительно записывать события в системный журнал Android. После изменения перезапустите приложение. Внимание: эти записи могут быть доступны приложениям диагностики и замедлять работу. Не рекомендуется для повседневного использования.",
         defaultValue = { buildMeta -> buildMeta.buildType != BuildType.RELEASE },
         // False so it's displayed in the developer options screen
         isFinished = false,
     ),
     SelectableMediaQuality(
         key = "feature.selectable_media_quality",
-        title = "Select media quality per upload",
-        description = "You can select the media quality for each attachment you upload.",
+        title = "Выбор качества фотографий и видео",
+        description = "Разрешить выбирать качество каждого отправляемого медиафайла.",
         defaultValue = { false },
         // False so it's displayed in the developer options screen
         isFinished = false,
     ),
     Threads(
         key = "feature.thread_timeline",
-        title = "Threads",
-        description = "Renders thread messages as a dedicated timeline. Restarting the app is required for this setting to fully take effect.",
+        title = "Ветки обсуждений",
+        description = "Показывать ответы в отдельных ветках сообщений. После изменения требуется перезапуск.",
         defaultValue = { false },
         isFinished = false,
         isInLabs = true,
     ),
     MultiAccount(
         key = "feature.multi_account",
-        title = "Multi accounts",
-        description = "Allow the application to connect to multiple accounts at the same time." +
-            "\n\nWARNING: this feature is EXPERIMENTAL and UNSTABLE.",
+        title = "Несколько учётных записей",
+        description = "Разрешить вход в несколько аккаунтов одновременно. Экспериментальная и нестабильная функция.",
         defaultValue = { false },
         isFinished = false,
     ),
     QrCodeLogin(
         key = "feature.qr_code_login",
-        title = "QR Code Login",
-        description = "Allow logging in on other devices using a QR code.",
+        title = "Вход по QR-коду",
+        description = "Разрешить вход на дополнительных устройствах через QR-код.",
         defaultValue = { false },
         isFinished = false,
     ),
     AllowBlackTheme(
         key = "feature.allow_black_theme",
-        title = "Black theme",
-        description = "Allow selecting the black appearance theme for battery saving on OLED.",
+        title = "Чёрная тема",
+        description = "Разрешить полностью чёрную тему для экономии заряда на OLED-экранах.",
         defaultValue = { false },
         isFinished = false,
     ),
     ValidateNetworkWhenSchedulingNotificationFetching(
         key = "feature.validate_network_when_scheduling_notification_fetching",
-        title = "Validate internet connectivity when scheduling notification fetching",
-        description = "Only fetch events for push notifications when the device has internet connectivity. " +
-            "Enabling this can be problematic in air-gapped environments.",
+        title = "Проверка интернета для уведомлений",
+        description = "Загружать новые уведомления только при наличии интернет-соединения.",
         defaultValue = { true },
         isFinished = false,
     ),
     JumpToUnread(
         key = "feature.jump_to_unread",
-        title = "Jump to unread messages",
-        description = "Show a button to jump to the read marker, plus a count badge on the scroll-to-bottom button " +
-            "when new messages arrive while scrolled away.",
+        title = "Переход к непрочитанным",
+        description = "Добавить кнопку перехода к непрочитанным сообщениям и счётчик возле кнопки прокрутки вниз.",
         defaultValue = { false },
         isFinished = false,
     ),
     SlashCommand(
         key = "feature.slash_command",
-        title = "Parse slash commands in the message composer",
-        description = "Allow parsing slash commands in the message composer and perform action.",
+        title = "Команды через косую черту",
+        description = "Распознавать специальные команды, начинающиеся с символа /, в поле сообщения.",
         defaultValue = { false },
         isFinished = false,
     ),
     AutomaticBackPagination(
         key = "feature.automatic_back_pagination",
-        title = "Automatic back pagination of rooms",
-        description = "Allow the app to automatically back paginate in rooms to pre-fetch older messages in background." +
-            "\nRequires an app restart to take effect.",
+        title = "Загрузка истории переписки",
+        description = "Автоматически загружать старые сообщения в фоне. После изменения требуется перезапуск.",
         defaultValue = { true },
         isFinished = false,
     ),
     UnreadIndicatorCount(
         key = "feature.unread_indicator_count",
-        title = "Unread indicator count",
-        description = "Show the number of unread messages on the unread indicator in the room list.",
+        title = "Счётчик непрочитанных",
+        description = "Показывать количество непрочитанных сообщений в списке чатов.",
         defaultValue = { true },
         isFinished = false,
     ),
     SendGalleryMessages(
         key = "feature.send_gallery_messages",
-        title = "Send gallery messages",
-        description = "Allow sending multiple media items in a single message.",
+        title = "Несколько медиа в одном сообщении",
+        description = "Разрешить отправлять несколько фотографий и видео одним сообщением.",
         defaultValue = { false },
         isFinished = false,
         isInLabs = true,
     ),
     Knock(
         key = "feature.knock",
-        title = "Ask to join",
-        description = "Allow creating rooms which users can request access to.",
+        title = "Запрос на вступление",
+        description = "Разрешить создавать комнаты, в которые можно запросить доступ.",
         defaultValue = { false },
         isFinished = false,
         isInLabs = true,
     ),
     MessageSearch(
         key = "feature.message_search",
-        title = "Message search",
-        description = "Index messages locally so they can be searched. Only messages received while enabled are indexed.",
+        title = "Поиск по сообщениям",
+        description = "Индексировать сообщения для локального поиска. Учитываются только сообщения, полученные после включения.",
         defaultValue = { true },
         isFinished = false,
     ),
     NewTimelineEventRenderer(
         key = "feature.new_timeline_event_renderer",
-        title = "New timeline event renderer",
-        description = "Render formatted message bodies natively with Jetpack Compose instead of the rich text editor view.",
+        title = "Новый режим отображения сообщений",
+        description = "Отображать форматированный текст средствами Jetpack Compose вместо старого компонента.",
         defaultValue = { false },
         isFinished = false,
         isInLabs = false,
     ),
     NativeCall(
         key = "feature.native_call",
-        title = "Native calls (experimental)",
-        description = "Place calls with the native MatrixRTC stack instead of the Element Call WebView.",
+        title = "Новый движок звонков (тестовый)",
+        description = "Использовать экспериментальный движок MatrixRTC вместо встроенной веб-версии звонков.",
         defaultValue = { false },
         isFinished = false,
     ),
     ReceiveNotificationsFromOtherSignedInAccounts(
         key = "feature.receive_notifications_from_other_signed_in_accounts",
-        title = "Receive notifications from other signed-in accounts",
-        description = "Receive push notifications for events sent from other signed-in accounts on this device. " +
-            "Note this may result in duplicate notifications if you have multiple accounts signed in on the same device, it should only be used for testing.",
+        title = "Уведомления из других аккаунтов",
+        description = "Получать уведомления из других аккаунтов, открытых на телефоне. Возможны дубликаты, использовать только для тестирования.",
         defaultValue = { false },
         isFinished = false,
     )
@@ -187,8 +178,8 @@ enum class FeatureFlags(
  */
 object ShowAllActivityInRoomListFeature : Feature {
     override val key: String = "feature.show_all_activity_in_room_list"
-    override val title: String = "Show all activity in room list"
-    override val description: String = "Show all activity indicators in the room list, using unread messages instead of notifications."
+    override val title: String = "Все события в списке чатов"
+    override val description: String = "Показывать индикаторы активности по непрочитанным сообщениям, а не только по уведомлениям."
     override val defaultValue: (BuildMeta) -> Boolean = { true }
     override val isFinished: Boolean = false
     override val isInLabs: Boolean = false
