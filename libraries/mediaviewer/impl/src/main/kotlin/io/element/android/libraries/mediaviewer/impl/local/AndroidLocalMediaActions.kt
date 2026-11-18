@@ -155,9 +155,15 @@ class AndroidLocalMediaActions(
     }
 
     private suspend fun openFile(localMedia: LocalMedia) {
+        // Keep a durable copy in cache before launching another app: the Rust
+        // media handle may delete its temporary download immediately afterwards.
+        val cacheFolder = File(context.cacheDir, "temp/media/external").apply { mkdirs() }
+        val extension = localMedia.toFile().extension.ifEmpty { "bin" }
+        val stableFile = File.createTempFile("open-", ".$extension", cacheFolder)
+        localMedia.toFile().copyTo(stableFile, overwrite = true)
         val openMediaIntent = Intent(Intent.ACTION_VIEW)
             .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            .setDataAndType(localMedia.toShareableUri(), localMedia.info.mimeType)
+            .setDataAndType(stableFile.toShareableUri(), localMedia.info.mimeType)
         withContext(coroutineDispatchers.main) {
             activityContext?.startActivity(openMediaIntent)
         }
