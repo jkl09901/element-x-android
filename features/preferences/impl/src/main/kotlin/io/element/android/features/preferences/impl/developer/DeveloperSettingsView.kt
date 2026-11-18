@@ -52,7 +52,7 @@ fun DeveloperSettingsView(
     }
     if (state.markAllRoomsAsReadAction.isConfirming()) {
         ConfirmationDialog(
-            title = "Are you sure you want to mark all the rooms as read?",
+            title = "Отметить все переписки прочитанными?",
             content = "",
             submitText = stringResource(CommonStrings.action_yes),
             onSubmitClick = { state.eventSink(DeveloperSettingsEvent.MarkAllRoomsAsRead(needsConfirmation = false)) },
@@ -93,10 +93,10 @@ fun DeveloperSettingsView(
         MarkAllRoomsAsReadCategory(state)
 
         if (state.isEnterpriseBuild) {
-            PreferenceCategory(title = "Theme") {
+            PreferenceCategory(title = "Оформление") {
                 ListItem(
                     content = {
-                        Text("Change brand color")
+                        Text("Изменить фирменный цвет")
                     },
                     onClick = {
                         state.eventSink(DeveloperSettingsEvent.SetShowColorPicker(true))
@@ -104,7 +104,7 @@ fun DeveloperSettingsView(
                 )
                 ListItem(
                     content = {
-                        Text("Reset brand color")
+                        Text("Сбросить фирменный цвет")
                     },
                     onClick = {
                         state.eventSink(DeveloperSettingsEvent.ChangeBrandColor(null))
@@ -116,12 +116,12 @@ fun DeveloperSettingsView(
         extraOptions()
 
         val cache = state.cacheSize
-        PreferenceCategory(title = "Cache") {
+        PreferenceCategory(title = "Данные и кэш") {
             ListItem(
-                content = { Text("Database sizes") },
+                content = { Text("Размеры баз данных") },
                 supportingContent = {
                     if (state.databaseSizes.isLoading()) {
-                        Text("Computing...")
+                        Text("Подсчёт...")
                     } else {
                         val dbSizes = state.databaseSizes.dataOrNull()
                         if (dbSizes != null && dbSizes.isNotEmpty()) {
@@ -131,14 +131,14 @@ fun DeveloperSettingsView(
                                 }
                             }
                         } else {
-                            Text("Unknown")
+                            Text("Неизвестно")
                         }
                     }
                 }
             )
             ListItem(
                 content = {
-                    Text("Vacuum stores")
+                    Text("Оптимизировать хранилища")
                 },
                 onClick = {
                     state.eventSink(DeveloperSettingsEvent.VacuumStores)
@@ -146,7 +146,7 @@ fun DeveloperSettingsView(
             )
             ListItem(
                 content = {
-                    Text("Clear cache")
+                    Text("Очистить кэш")
                 },
                 trailingContent = if (state.cacheSize.isLoading() || state.clearCacheAction.isLoading()) {
                     ListItemContent.Custom {
@@ -187,9 +187,9 @@ private fun SessionCategory(
     deviceId: DeviceId,
     onCopyToClipboard: (String) -> Unit,
 ) {
-    PreferenceCategory(title = "Session") {
+    PreferenceCategory(title = "Текущий сеанс") {
         ListItem(
-            content = { Text("DeviceId") },
+            content = { Text("Идентификатор устройства") },
             supportingContent = { Text(text = deviceId.value) },
             onClick = { onCopyToClipboard(deviceId.value) }
         )
@@ -198,17 +198,17 @@ private fun SessionCategory(
 
 @Composable
 private fun MarkAllRoomsAsReadCategory(state: DeveloperSettingsState) {
-    PreferenceCategory(title = "Room list") {
+    PreferenceCategory(title = "Список переписок") {
         ListItem(
             content = {
-                Text("Mark all rooms as read")
+                Text("Отметить все переписки прочитанными")
             },
             supportingContent = {
                 Text(
                     text = """
-                        This will send a private read receipt and a read marker in every room you are part of. 
-                        It's a long running operation that might get rate limited.
-                        It will run in the background but the app must be alive for it to finish.
+                        Отправит подтверждение прочтения во все ваши переписки.
+                        Операция выполняется в фоне и может занять время.
+                        Для завершения не закрывайте приложение.
                         """.trimIndent(),
                     style = ElementTheme.typography.fontBodySmRegular,
                     color = ElementTheme.colors.textSecondary,
@@ -230,7 +230,7 @@ private fun NotificationCategory(
     PreferenceCategory(title = stringResource(id = R.string.screen_notification_settings_title)) {
         ListItem(
             content = {
-                Text("Push rules")
+                Text("Правила уведомлений")
             },
             onClick = onPushRulesClick,
         )
