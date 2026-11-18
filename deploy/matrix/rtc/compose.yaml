@@ -23,8 +23,12 @@ services:
       LIVEKIT_SECRET_FROM_FILE: "/run/secrets/livekit_secret"
       LIVEKIT_FULL_ACCESS_HOMESERVERS: "matrix.tyanet.ru"
       LIVEKIT_JWT_BIND: ":8080"
+      LIVEKIT_AS_REGISTRATION_FILE: "/run/secrets/rtc_appservice.yaml"
+      LIVEKIT_HS_SERVER_NAME: "matrix.tyanet.ru"
+      LIVEKIT_SANITY_CHECK_INTERVAL_SECONDS: "120"
       LIVEKIT_LOG_LEVEL: "info"
     volumes:
       - ./secrets/livekit_secret:/run/secrets/livekit_secret:ro
+      - /opt/tolkomy-matrix/synapse-data/rtc-appservice.yaml:/run/secrets/rtc_appservice.yaml:ro
     ports:
       - "127.0.0.1:18080:8080"
