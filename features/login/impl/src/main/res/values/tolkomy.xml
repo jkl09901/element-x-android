@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only the independent Tolko My fork uses these strings. -->
+<resources>
+    <string name="tolkomy_welcome_title">Только мы</string>
+    <string name="tolkomy_welcome_message">Своя связь. Для самых близких.</string>
+</resources>
