@@ -60,16 +60,16 @@ fun AppDeveloperSettingsView(
             onClick = { state.eventSink(AppDeveloperSettingsEvent.SetDeveloperModeEnabled(!state.isDeveloperModeEnabled)) }
         )
         PreferenceCategory(
-            title = "Feature flags",
+            title = "Дополнительные возможности",
             showTopDivider = false,
         ) {
             FeatureListContent(state)
         }
         ElementCallCategory(state = state)
-        PreferenceCategory(title = "Rust SDK") {
+        PreferenceCategory(title = "Диагностика движка сообщений") {
             PreferenceDropdown(
-                title = "Tracing log level",
-                supportingText = "Requires app reboot",
+                title = "Уровень записи событий",
+                supportingText = "Требуется перезапуск приложения",
                 selectedOption = state.tracingLogLevel.dataOrNull(),
                 options = LogLevelItem.entries.toImmutableList(),
                 onSelectOption = { logLevel ->
@@ -77,9 +77,9 @@ fun AppDeveloperSettingsView(
                 }
             )
         }
-        PreferenceCategory(title = "Enable trace logs per SDK feature") {
+        PreferenceCategory(title = "Подробная диагностика компонентов") {
             Text(
-                text = "Requires app reboot",
+                text = "Требуется перезапуск приложения",
                 style = ElementTheme.typography.fontBodyMdRegular,
                 color = ElementTheme.colors.textSecondary,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -95,10 +95,10 @@ fun AppDeveloperSettingsView(
         RageshakePreferencesView(
             state = state.rageshakeState,
         )
-        PreferenceCategory(title = "Crash") {
+        PreferenceCategory(title = "Проверка аварий") {
             ListItem(
                 content = {
-                    Text("Crash the app 💥")
+                    Text("Проверить аварийное завершение 💥")
                 },
                 onClick = { error("This crash is a test.") }
             )
@@ -117,14 +117,14 @@ private fun GitCategory(
     gitSha: String,
     onCopyToClipboard: (String) -> Unit,
 ) {
-    PreferenceCategory(title = "Git") {
+    PreferenceCategory(title = "Версия исходного кода") {
         ListItem(
-            content = { Text("Git branch") },
+            content = { Text("Ветка разработки") },
             supportingContent = { Text(text = gitBranch) },
             onClick = { onCopyToClipboard(gitBranch) }
         )
         ListItem(
-            content = { Text("Git SHA") },
+            content = { Text("Идентификатор сборки") },
             supportingContent = { Text(text = gitSha) },
             onClick = { onCopyToClipboard(gitSha) }
         )
@@ -135,7 +135,7 @@ private fun GitCategory(
 private fun ElementCallCategory(
     state: AppDeveloperSettingsState,
 ) {
-    PreferenceCategory(title = "Element Call") {
+    PreferenceCategory(title = "Сервер звонков") {
         val callUrlState = state.customElementCallBaseUrlState
 
         val supportingText = if (callUrlState.baseUrl.isNullOrEmpty()) {
