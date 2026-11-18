@@ -183,10 +183,20 @@ class AndroidLocalMediaActions(
             }
             resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
         } ?: throw IOException("Unable to create the destination file")
-        localMedia.openStream()?.use { input ->
-            resolver.openOutputStream(outputUri).use { output ->
-                input.copyTo(output!!, DEFAULT_BUFFER_SIZE)
+        try {
+            val input = localMedia.openStream()
+                ?: throw IOException("Не удалось прочитать скачанный файл")
+            input.use { source ->
+                val output = resolver.openOutputStream(outputUri)
+                    ?: throw IOException("Не удалось открыть файл для сохранения")
+                output.use { destination ->
+                    source.copyTo(destination, DEFAULT_BUFFER_SIZE)
+                }
             }
+        } catch (error: Exception) {
+            // Do not leave an empty or incomplete file in Downloads on failure.
+            resolver.delete(outputUri, null, null)
+            throw error
         }
     }
 
@@ -195,9 +205,11 @@ class AndroidLocalMediaActions(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
             localMedia.info.filename
         )
-        localMedia.openStream()?.use { input ->
-            FileOutputStream(target).use { output ->
-                input.copyTo(output)
+        val input = localMedia.openStream()
+            ?: throw IOException("Не удалось прочитать скачанный файл")
+        input.use { source ->
+            FileOutputStream(target).use { destination ->
+                source.copyTo(destination)
             }
         }
     }
