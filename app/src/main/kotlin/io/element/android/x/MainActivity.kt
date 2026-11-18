@@ -8,6 +8,7 @@
 
 package io.element.android.x
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -48,6 +49,10 @@ import timber.log.Timber
 private val loggerTag = LoggerTag("MainActivity")
 
 class MainActivity : NodeActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(RussianLocale.wrap(newBase))
+    }
+
     private lateinit var mainNode: MainNode
     private lateinit var appBindings: AppBindings
 
