@@ -20,30 +20,12 @@ android {
     }
 
     defaultConfig {
-        buildConfigFieldStr(
-            name = "URL_POLICY",
-            value = if (isEnterpriseBuild) {
-                BuildTimeConfig.URL_POLICY ?: ""
-            } else {
-                "https://element.io/cookie-policy"
-            },
-        )
-        buildConfigFieldStr(
-            name = "BUG_REPORT_URL",
-            value = if (isEnterpriseBuild) {
-                BuildTimeConfig.BUG_REPORT_URL ?: ""
-            } else {
-                "https://rageshakes.element.io/api/submit"
-            },
-        )
-        buildConfigFieldStr(
-            name = "BUG_REPORT_APP_NAME",
-            value = if (isEnterpriseBuild) {
-                BuildTimeConfig.BUG_REPORT_APP_NAME ?: ""
-            } else {
-                "element-x-android"
-            },
-        )
+        // Private messenger: never submit diagnostics, device identifiers,
+        // crash logs or screenshots to Element's Rageshake endpoint.
+        buildConfigFieldStr("URL_POLICY", BuildTimeConfig.URL_POLICY ?: "")
+        buildConfigFieldStr("BUG_REPORT_URL", BuildTimeConfig.BUG_REPORT_URL ?: "")
+        buildConfigFieldStr("BUG_REPORT_APP_NAME", BuildTimeConfig.BUG_REPORT_APP_NAME ?: "")
+
     }
 }
 
