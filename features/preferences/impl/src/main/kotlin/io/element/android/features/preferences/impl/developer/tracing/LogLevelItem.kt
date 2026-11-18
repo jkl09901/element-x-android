@@ -14,22 +14,22 @@ import io.element.android.libraries.designsystem.components.preferences.Dropdown
 enum class LogLevelItem : DropdownOption {
     ERROR {
         @Composable
-        override fun getText(): String = "Error"
+        override fun getText(): String = "Ошибки"
     },
     WARN {
         @Composable
-        override fun getText(): String = "Warn"
+        override fun getText(): String = "Предупреждения"
     },
     INFO {
         @Composable
-        override fun getText(): String = "Info"
+        override fun getText(): String = "Информация"
     },
     DEBUG {
         @Composable
-        override fun getText(): String = "Debug"
+        override fun getText(): String = "Отладка"
     },
     TRACE {
         @Composable
-        override fun getText(): String = "Trace"
+        override fun getText(): String = "Подробный журнал"
     }
 }
