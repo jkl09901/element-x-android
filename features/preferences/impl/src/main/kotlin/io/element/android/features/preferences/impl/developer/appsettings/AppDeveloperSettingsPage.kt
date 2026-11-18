@@ -33,7 +33,7 @@ fun AppDeveloperSettingsPage(
         onBackClick = {
             onBackClick()
         },
-        title = "Application developer options",
+        title = "Настройки разработчика",
     ) {
         AppDeveloperSettingsView(
             state = state,
