@@ -231,14 +231,14 @@ private fun OnBoardingContent(state: OnBoardingState) {
                 horizontalAlignment = CenterHorizontally,
             ) {
                 Text(
-                    text = stringResource(id = R.string.screen_onboarding_welcome_title),
+                    text = stringResource(id = R.string.tolkomy_welcome_title),
                     color = ElementTheme.colors.textPrimary,
                     style = ElementTheme.typography.fontHeadingLgBold,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = stringResource(id = R.string.screen_onboarding_welcome_message, state.productionApplicationName),
+                    text = stringResource(id = R.string.tolkomy_welcome_message),
                     color = ElementTheme.colors.textPrimary,
                     style = ElementTheme.typography.fontBodyLgRegular,
                     textAlign = TextAlign.Center,
